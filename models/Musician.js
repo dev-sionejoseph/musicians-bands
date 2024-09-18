@@ -1,6 +1,6 @@
 const {Sequelize, db, DataTypes, Model} = require('../db');
 
-// TODO - define the Band model
+// TODO - define the Musician model
 class Musician extends Model {
 
 }
