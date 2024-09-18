@@ -14,7 +14,8 @@ describe('Band, Musician, and Song Models', () => {
 
     test('can create a Band', async () => {
         // TODO - test creating a band
-        expect('NO TEST').toBe('EXPECTED VALUE HERE');
+        const paramore = await Band.create("Paramore", "Rock")
+        expect(paramore.name).toBe('Paramore');
     })
 
     test('can create a Musician', async () => {
