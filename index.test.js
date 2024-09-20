@@ -38,9 +38,9 @@ describe('Band, Musician, and Song Models', () => {
     })
 
     test('can delete a Band', async () => {
-        const groupTherapy = await Band.create({name:"GroupTherapy", genre: "HipHop"})
-        const bandSplit = await groupTherapy.destroy()
-        expect(bandSplit).toBe(groupTherapy);
+        const katseye = await Band.create({name:"Katseye", genre: "KPop"})
+        const bandSplit = await katseye.destroy()
+        expect(bandSplit).toBe(katseye);
     })
 
     test('can delete a Musician', async () => {
@@ -48,5 +48,41 @@ describe('Band, Musician, and Song Models', () => {
         const sza = await Musician.create({name:"SZA", instrument: "vocals"})
         const szaQUIT = await sza.destroy()
         expect(szaQUIT).toBe(sza);
+    })
+
+    //Associations Tests
+
+    test('One Band has many Musicians', async () => {
+        const groupTherapy = await Band.create({name:"GroupTherapy", genre: "HipHop"})
+        const swim = await Musician.create({name:"Swim", instrument: "vocals"})
+        const tjonline = await Musician.create({name:"TJOnline", instrument: "vocals"})
+        const jadaG = await Musician.create({name:"Jada Grace", instrument: "vocals"})
+        await groupTherapy.addMusicians([swim,tjonline,jadaG]);
+        const membersGT = await groupTherapy.getMusicians()
+        
+        expect(membersGT.length).toEqual([swim,tjonline,jadaG].length);
+        expect(membersGT[0].name).toEqual("Swim");
+
+    })
+
+    test('Many Bands have many Songs', async () => {
+        const jayz = await Band.create({name:"JayZ", genre: "HipHop"})
+        const linkinPark = await Band.create({name:"Katseye", genre: "Rock"})
+        const sharedSongs = await Song.bulkCreate([
+            {
+                name: "Numb/Encore",
+                genre: "Hip Hop / Rock"
+            },{
+                name: "Izzo/In the End",
+                genre: "Hip Hop / Rock"
+            }
+        ])
+        await jayz.addSongs(sharedSongs);
+        await linkinPark.addSongs(sharedSongs);
+        
+        const allSongs = await Song.findAll({ include: Band })
+
+        expect(await allSongs[0].band).toEqual(await allSongs[1].band);
+
     })
 })
